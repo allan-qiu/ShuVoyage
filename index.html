@@ -1,0 +1,891 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>蜀运 · 成都</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700;900&display=swap">
+<style>
+/* 布局：顶部固定导航 + 单页六个视图（首页 + 五个分页面），用 # 路由切换。
+   视觉：三星堆青铜绿、金沙金、朱砂红；首页以太阳神鸟为主图，大字“蜀运”是唯一的重笔触。 */
+:root{
+  --bg:#ECEFEA; --surface:#F7F9F5; --surface2:#DFE6DF;
+  --fg:#13201D; --muted:#45564F; --line:#C3CEC5;
+  --cinnabar:#B5301A; --bronze:#2A6B62; --gold:#8F6710; --gold-fill:#D6A435;
+  --on-accent:#FFFFFF;
+  --font-display:"Noto Serif SC","Songti SC","STSong","SimSun",serif;
+  --font-body:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono","Noto Sans SC",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1917; --surface:#132420; --surface2:#1C312B;
+    --fg:#E8F0EB; --muted:#9DB4AC; --line:#2B4239;
+    --cinnabar:#F0694D; --bronze:#5DB7A8; --gold:#E2B24C; --gold-fill:#E6B84F;
+    --on-accent:#1B0C08; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1917; --surface:#132420; --surface2:#1C312B;
+  --fg:#E8F0EB; --muted:#9DB4AC; --line:#2B4239;
+  --cinnabar:#F0694D; --bronze:#5DB7A8; --gold:#E2B24C; --gold-fill:#E6B84F;
+  --on-accent:#1B0C08; color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--fg);
+  font:16px/1.75 var(--font-body);
+  padding-block:0 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  -webkit-text-size-adjust:100%;
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:inherit}
+h1,h2,h3,p,ul,ol,dl,dd{margin:0}
+ul,ol{padding:0;list-style:none}
+:focus-visible{outline:2px solid var(--cinnabar);outline-offset:3px}
+.wrap{max-width:1080px;margin-inline:auto}
+
+/* header */
+.site-head{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.site-head .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 24px;padding-block:8px}
+.brand{display:flex;align-items:baseline;gap:10px;text-decoration:none}
+.brand b{font:900 24px/1 var(--font-display);letter-spacing:.04em}
+.brand b span{color:var(--cinnabar)}
+.brand small{font:400 11px/1 var(--font-mono);letter-spacing:.18em;color:var(--muted)}
+.nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0}
+.nav::-webkit-scrollbar{display:none}
+.nav a{padding:10px 12px;color:var(--muted);text-decoration:none;font-weight:500;white-space:nowrap;border-bottom:2px solid transparent}
+.nav a:hover{color:var(--fg)}
+.nav a[aria-current="page"]{color:var(--fg);border-bottom-color:var(--cinnabar)}
+@media (max-width:640px){.nav{width:100%;order:2;justify-content:space-between}}
+
+/* views */
+.view{display:flex;flex-direction:column;gap:60px;padding-block:36px 24px}
+.eyebrow{font:500 12px/1.6 var(--font-mono);letter-spacing:.14em;color:var(--bronze);text-transform:uppercase}
+h2{font:700 clamp(24px,3.6vw,34px)/1.3 var(--font-display);text-wrap:balance}
+h3{font:700 19px/1.4 var(--font-display)}
+.lede{max-width:36em;color:var(--muted);font-size:17px}
+.sec{display:flex;flex-direction:column;gap:22px}
+.sec-head{display:flex;flex-direction:column;gap:6px;max-width:40em}
+.sec-head p{color:var(--muted)}
+.note{font-size:14px;color:var(--muted)}
+
+.phead{position:relative;isolation:isolate;display:flex;flex-direction:column;gap:14px;padding-block:8px 4px}
+.phead .ghost{position:absolute;right:0;top:-30px;z-index:-1;font:900 clamp(150px,30vw,270px)/1 var(--font-display);color:var(--surface2);pointer-events:none;user-select:none}
+.phead h1{font:900 clamp(42px,7.5vw,68px)/1.1 var(--font-display);text-wrap:balance}
+
+/* buttons / chips */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 22px;border:0;border-radius:4px;background:var(--cinnabar);color:var(--on-accent);font:500 16px/1 var(--font-body);cursor:pointer;text-decoration:none}
+.btn:hover{filter:brightness(1.08)}
+.link{color:var(--bronze);font-weight:500;text-underline-offset:4px}
+.chip{min-height:40px;padding:6px 16px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--fg);font:500 15px/1 var(--font-body);cursor:pointer}
+.chip[aria-pressed="true"],.chip[aria-selected="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.tag{display:inline-block;padding:2px 10px;border:1px solid var(--line);border-radius:999px;font:500 12px/1.6 var(--font-mono);letter-spacing:.06em;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px 20px}
+
+/* home */
+.hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:28px 40px;align-items:center;padding-block:8px 0}
+.hero-text{display:flex;flex-direction:column;gap:18px}
+.hero h1{font:900 clamp(96px,19vw,196px)/.92 var(--font-display);letter-spacing:.02em}
+.hero h1 span{color:var(--cinnabar)}
+.hero .lede{font-size:18px}
+.cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px}
+.sun{width:min(100%,400px);height:auto;justify-self:center}
+.sun .ray,.sun .bird{fill:var(--gold-fill)}
+.sun .eye{fill:var(--bg)}
+@media (max-width:820px){.hero{grid-template-columns:minmax(0,1fr)}.sun{width:min(78%,300px)}}
+
+.draw{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 28px;align-items:start}
+.draw .seal{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:84px;height:84px;border:2px solid var(--cinnabar);border-radius:4px;color:var(--cinnabar);font-family:var(--font-display);font-weight:900;line-height:1.1;text-align:center}
+.draw .seal b{font-size:22px}
+.draw .seal span{font-size:13px;font-weight:700}
+.draw-body{display:flex;flex-direction:column;gap:6px}
+.draw-body p{font:600 clamp(18px,2.4vw,22px)/1.6 var(--font-display)}
+.draw-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px}
+@media (max-width:520px){.draw{grid-template-columns:minmax(0,1fr)}}
+
+.entries{display:flex;flex-direction:column;border-bottom:1px solid var(--line)}
+.entry{display:grid;grid-template-columns:76px minmax(0,1fr) 120px;gap:6px 18px;align-items:center;padding:18px 0;border-top:1px solid var(--line);text-decoration:none}
+.entry .big{font:900 52px/1 var(--font-display);color:var(--bronze);transition:color .2s}
+.entry strong{display:block;font:700 20px/1.4 var(--font-display)}
+.entry span.d{color:var(--muted)}
+.entry .go{font:500 20px/1 var(--font-mono);color:var(--muted)}
+.entry:hover .big,.entry:hover .go{color:var(--cinnabar)}
+
+.names{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.name{display:flex;flex-direction:column;gap:6px;padding-top:14px;border-top:3px solid var(--bronze)}
+.name b{font:900 28px/1.2 var(--font-display)}
+.name p{color:var(--muted)}
+@media (max-width:720px){.names{grid-template-columns:minmax(0,1fr)}}
+
+/* timeline + rows */
+.tl{display:flex;flex-direction:column}
+.tl li{display:grid;grid-template-columns:150px minmax(0,1fr);gap:6px 28px;padding:18px 0;border-top:1px solid var(--line)}
+.tl li:last-child{border-bottom:1px solid var(--line)}
+.era{font:500 13px/1.8 var(--font-mono);letter-spacing:.04em;color:var(--bronze)}
+.tl p{color:var(--muted);max-width:44em}
+@media (max-width:640px){.tl li{grid-template-columns:minmax(0,1fr)}}
+
+.rows{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,260px);gap:6px 28px;padding:18px 0;border-top:1px solid var(--line)}
+.row:last-child{border-bottom:1px solid var(--line)}
+.row p{color:var(--muted)}
+.row .meta{font:400 14px/1.7 var(--font-mono);color:var(--bronze)}
+@media (max-width:640px){.row{grid-template-columns:minmax(0,1fr)}}
+
+/* food */
+.tools{display:flex;flex-direction:column;gap:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.slider{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.slider label{font-weight:500}
+.slider input[type=range]{flex:1 1 200px;max-width:340px;accent-color:var(--cinnabar);min-height:32px}
+.slider output{font:500 14px/1 var(--font-mono);color:var(--cinnabar);min-width:6em}
+.dishes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.dish{display:flex;flex-direction:column;gap:8px}
+.dish-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dish p{color:var(--muted);font-size:15px}
+.dots{display:inline-flex;gap:4px}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--cinnabar)}
+.flavors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 24px}
+.flavor{display:flex;flex-direction:column;gap:4px;padding-top:12px;border-top:1px solid var(--line)}
+.flavor b{font:700 20px/1.4 var(--font-display);color:var(--cinnabar)}
+.flavor p{color:var(--muted);font-size:15px}
+@media (max-width:900px){.dishes,.flavors{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.dishes,.flavors{grid-template-columns:minmax(0,1fr)}}
+
+/* panda */
+.rhythm{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.slot{display:flex;flex-direction:column;gap:6px}
+.col{height:150px;display:flex;align-items:flex-end;background:var(--surface2);border-radius:3px;overflow:hidden}
+.col .fill{width:100%;height:var(--h);background:var(--bronze)}
+.slot .when{font:500 12px/1.5 var(--font-mono);color:var(--fg)}
+.slot .what{font-size:14px;color:var(--muted);line-height:1.5}
+.slot .lv{font:700 14px/1 var(--font-display);color:var(--bronze)}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.fact{display:flex;flex-direction:column;gap:6px}
+.fact p{color:var(--muted);font-size:15px}
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 32px}
+.rules li{padding:10px 0;border-top:1px solid var(--line)}
+@media (max-width:640px){.facts,.rules{grid-template-columns:minmax(0,1fr)}.slot .what{font-size:13px}}
+
+/* tea */
+.gaiwan{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:24px 40px;align-items:center}
+.gaiwan svg{width:100%;height:auto}
+.svgtxt{font-family:var(--font-display);font-weight:700;font-size:18px;fill:var(--fg)}
+.svgline{stroke:var(--muted);stroke-width:1;fill:none}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.trio .card{display:flex;flex-direction:column;gap:6px}
+.trio p{color:var(--muted);font-size:15px}
+.pills{display:flex;flex-wrap:wrap;gap:10px}
+.pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+.pill b{font:900 22px/1 var(--font-display);color:var(--cinnabar)}
+.crafts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 24px}
+.craft{display:flex;flex-direction:column;gap:4px;padding-top:12px;border-top:3px solid var(--gold-fill)}
+.craft b{font:700 19px/1.4 var(--font-display)}
+.craft p{color:var(--muted);font-size:15px}
+@media (max-width:820px){.gaiwan{grid-template-columns:minmax(0,1fr)}.trio,.crafts{grid-template-columns:minmax(0,1fr)}}
+
+/* plan */
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.panel{display:flex;flex-direction:column;gap:20px}
+.panel-head{display:flex;flex-direction:column;gap:4px}
+.slots{display:flex;flex-direction:column}
+.slots li{display:grid;grid-template-columns:76px minmax(0,1fr);gap:4px 20px;padding:16px 0;border-top:1px solid var(--line)}
+.slots li:last-child{border-bottom:1px solid var(--line)}
+.slots .t{font:500 13px/1.9 var(--font-mono);color:var(--bronze);letter-spacing:.06em}
+.slots b{display:block;font:700 18px/1.5 var(--font-display)}
+.slots p{color:var(--muted);font-size:15px}
+.opt{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.opt span{font-weight:500}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.three .card{display:flex;flex-direction:column;gap:6px}
+.three p,.three li{color:var(--muted);font-size:15px}
+.three ul{display:flex;flex-direction:column;gap:6px}
+.check{display:flex;flex-direction:column}
+.check label{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-top:1px solid var(--line);cursor:pointer}
+.check label:last-child{border-bottom:1px solid var(--line)}
+.check input{width:20px;height:20px;margin-top:4px;accent-color:var(--cinnabar);flex:none}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+@media (max-width:820px){.three{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:480px){.slots li{grid-template-columns:minmax(0,1fr)}}
+
+/* photos */
+figure{margin:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+figure img{display:block;width:100%;height:auto;aspect-ratio:var(--ar,auto);object-fit:cover;object-position:var(--op,50% 50%);border-radius:4px;background:var(--surface2)}
+figcaption{font-size:14px;line-height:1.6;color:var(--muted)}
+.gallery{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
+.s6{grid-column:span 6}.s3{grid-column:span 3}.s2{grid-column:span 2}
+.head-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,360px);gap:24px 40px;align-items:center}
+.entry .thumb{display:block;width:120px;height:90px;object-fit:cover;border-radius:4px;background:var(--surface2)}
+.inline-fig{max-width:340px}
+@media (max-width:820px){.head-grid{grid-template-columns:minmax(0,1fr)}.head-grid figure{max-width:360px}}
+@media (max-width:560px){.gallery{gap:10px}.s2{grid-column:span 6}}
+@media (max-width:520px){.entry{grid-template-columns:52px minmax(0,1fr) 84px}.entry .big{font-size:40px}.entry .thumb{width:84px;height:63px}}
+
+/* photos */
+.fig{margin:0;display:flex;flex-direction:column;gap:8px;break-inside:avoid}
+.fig img{display:block;width:100%;height:auto;border-radius:4px;background:var(--surface2)}
+.fig figcaption{font-size:14px;line-height:1.6;color:var(--muted)}
+.fig.crop img{aspect-ratio:3/2;object-fit:cover}
+.masonry{columns:3 220px;column-gap:14px}
+.masonry .fig{margin-bottom:14px}
+.gal-group{display:flex;flex-direction:column;gap:14px}
+.gal-group h3{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.gal-group h3 small{font:400 14px/1.6 var(--font-body);color:var(--muted)}
+.banner img{display:block;width:100%;height:auto;aspect-ratio:2.2/1;object-fit:cover;border-radius:4px;background:var(--surface2)}
+.banner figcaption{margin-top:8px;font-size:14px;color:var(--muted)}
+@media (max-width:640px){.banner img{aspect-ratio:3/2}}
+.mosaic{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.tile{position:relative;display:block;overflow:hidden;border-radius:4px;background:var(--surface2);aspect-ratio:4/3;text-decoration:none;color:#fff}
+.tile.big{grid-column:1/3;grid-row:1/3;aspect-ratio:auto}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.tile:hover img{transform:scale(1.04)}
+.tile .cap{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:2px;padding:28px 12px 10px;background:linear-gradient(to top,rgba(8,16,14,.78),rgba(8,16,14,0));font-size:13px;line-height:1.4;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.tile .cap b{font:700 17px/1.3 var(--font-display)}
+@media (max-width:640px){.mosaic{grid-template-columns:repeat(2,minmax(0,1fr))}.tile.big{grid-column:1/-1;grid-row:auto;aspect-ratio:4/3}}
+@media (prefers-reduced-motion:reduce){.tile img{transition:none}}
+.split2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:28px;align-items:start}
+.split2 .rl{display:flex;flex-direction:column;gap:14px}
+@media (max-width:820px){.split2{grid-template-columns:minmax(0,1fr)}.split2 .fig{max-width:420px}}
+.gaiwan .fig{max-width:340px}
+.optbox{display:flex;flex-direction:column;gap:20px}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.pair.one{grid-template-columns:minmax(0,1fr);max-width:520px}
+@media (max-width:560px){.pair{grid-template-columns:minmax(0,1fr)}}
+
+.foot{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="#home" aria-label="蜀运 首页"><b>蜀<span>运</span></b><small>CHENGDU</small></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="#home">首页</a>
+      <a href="#shu">古蜀</a>
+      <a href="#food">川味</a>
+      <a href="#panda">熊猫</a>
+      <a href="#tea">茶与戏</a>
+      <a href="#plan">行程</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ============ 首页 ============ -->
+<section class="view" data-view="home">
+  <div class="hero">
+    <div class="hero-text">
+      <p class="eyebrow">Chengdu · 北纬 30°40′ · 东经 104°04′ · 海拔约 500 米</p>
+      <h1>蜀<span>运</span></h1>
+      <p class="lede">成都古称锦官城、蓉城，是天府之国的中心。这里有三千年前的青铜与黄金，有红油与花椒，有吃竹子的熊猫，也有一坐就是一下午的老茶馆。</p>
+      <div class="cta">
+        <button class="btn" type="button" id="drawBtn">再抽一支蜀签</button>
+        <a class="link" href="#plan">直接看三日行程</a>
+      </div>
+    </div>
+    <svg class="sun" id="sun" viewBox="-110 -110 220 220" role="img" aria-label="灵感源自金沙太阳神鸟金饰的图案：十二道光芒环绕太阳，外圈四只飞鸟">
+      <defs>
+        <path id="ray" d="M0,-30 C13,-39 12,-54 2,-66 C-1,-54 -9,-42 0,-30 Z"/>
+        <g id="bird">
+          <path d="M0,-92 C36,-92 62,-70 70,-40 C58,-56 36,-72 0,-74 Z"/>
+          <circle cx="-5" cy="-83" r="10"/>
+          <path d="M-13,-87 L-27,-81 L-13,-77 Z"/>
+          <circle class="eye" cx="-3" cy="-85" r="2.4"/>
+        </g>
+      </defs>
+      <circle r="102" fill="var(--bronze)" opacity=".14"/>
+      <circle r="99" fill="none" stroke="var(--bronze)" stroke-width="1" stroke-dasharray="2 6" opacity=".7"/>
+      <g class="bird">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="150s" repeatCount="indefinite"/>
+        <use href="#bird"/><use href="#bird" transform="rotate(90)"/><use href="#bird" transform="rotate(180)"/><use href="#bird" transform="rotate(270)"/>
+      </g>
+      <g class="ray">
+        <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="220s" repeatCount="indefinite"/>
+        <use href="#ray"/><use href="#ray" transform="rotate(30)"/><use href="#ray" transform="rotate(60)"/><use href="#ray" transform="rotate(90)"/>
+        <use href="#ray" transform="rotate(120)"/><use href="#ray" transform="rotate(150)"/><use href="#ray" transform="rotate(180)"/><use href="#ray" transform="rotate(210)"/>
+        <use href="#ray" transform="rotate(240)"/><use href="#ray" transform="rotate(270)"/><use href="#ray" transform="rotate(300)"/><use href="#ray" transform="rotate(330)"/>
+      </g>
+      <circle r="19" fill="var(--gold-fill)"/>
+      <circle r="26" fill="none" stroke="var(--gold-fill)" stroke-width="2"/>
+    </svg>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><p class="eyebrow">影像</p><h2>成都的几个瞬间</h2></div>
+    <div class="mosaic">
+      <a class="tile big" href="#panda"><img src="img/panda.jpg" alt="对着镜头吐舌头的大熊猫" width="900" height="900" loading="lazy" decoding="async"><span class="cap"><b>熊猫</b>早上喂食时最活跃</span></a>
+      <a class="tile" href="#shu"><img src="img/js-sculpture.jpg" alt="林间的太阳神鸟雕塑" width="1000" height="751" loading="lazy" decoding="async"><span class="cap"><b>古蜀</b>太阳神鸟</span></a>
+      <a class="tile" href="#food"><img src="img/hotpot-red.jpg" alt="铺满花椒与辣椒的红汤火锅" width="900" height="921" loading="lazy" decoding="async"><span class="cap"><b>川味</b>红汤火锅</span></a>
+      <a class="tile" href="#tea"><img src="img/tea-gate.jpg" alt="人民公园里的鹤鸣茶社" width="1200" height="800" loading="lazy" decoding="async"><span class="cap"><b>茶馆</b>鹤鸣茶社</span></a>
+      <a class="tile" href="#plan"><img src="img/djy-yuzui.jpg" alt="都江堰鱼嘴分水处的江面" width="1000" height="750" loading="lazy" decoding="async"><span class="cap"><b>近郊</b>都江堰鱼嘴</span></a>
+    </div>
+  </div>
+
+  <div class="card draw" aria-live="polite">
+    <div class="seal" id="drawSeal"><b>上上</b><span>口福</span></div>
+    <div class="draw-body">
+      <p class="eyebrow">今日蜀签 · 娱乐签，不作预测</p>
+      <p id="drawText"></p>
+      <div class="draw-meta"><a class="link" id="drawLink" href="#food">去看看</a></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><p class="eyebrow">五个入口</p><h2>从哪里开始都行</h2></div>
+    <div class="entries">
+      <a class="entry" href="#shu"><span class="big">古</span><span><strong>古蜀</strong><span class="d">三星堆的青铜、金沙的太阳神鸟、都江堰的水，一条三千年的时间线。</span></span><img class="thumb" src="img/sxd-mask-profile.jpg" alt="三星堆青铜纵目面具" width="360" height="270" loading="lazy" decoding="async"></a>
+      <a class="entry" href="#food"><span class="big">味</span><span><strong>川味</strong><span class="d">十二道值得先试的菜，加一个可以按辣度筛选的小工具。</span></span><img class="thumb" src="img/hotpot-red.jpg" alt="红油火锅" width="360" height="270" loading="lazy" decoding="async"></a>
+      <a class="entry" href="#panda"><span class="big">熊</span><span><strong>熊猫</strong><span class="d">几点去最好、怎么看、还有哪些地方不止有熊猫。</span></span><img class="thumb" src="img/panda.jpg" alt="一只吐舌头的大熊猫" width="360" height="270" loading="lazy" decoding="async"></a>
+      <a class="entry" href="#tea"><span class="big">茶</span><span><strong>茶与戏</strong><span class="d">盖碗茶、川剧变脸，和几样至今还在做的手艺。</span></span><img class="thumb" src="img/tea-gate.jpg" alt="人民公园鹤鸣茶社" width="360" height="270" loading="lazy" decoding="async"></a>
+      <a class="entry" href="#plan"><span class="big">程</span><span><strong>三日行程</strong><span class="d">古蜀、熊猫、近郊各占一天，附出发前清单。</span></span><img class="thumb" src="img/djy-panorama.jpg" alt="俯瞰岷江与都江堰一带" width="360" height="270" loading="lazy" decoding="async"></a>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><p class="eyebrow">别名</p><h2>三个名字，三段来历</h2></div>
+    <div class="names">
+      <div class="name"><b>天府之国</b><p>都江堰让成都平原旱涝保收，成了粮仓，这个称呼由此而来。</p></div>
+      <div class="name"><b>锦官城</b><p>汉代起蜀锦是成都的重要产业，朝廷设官管理，城因此得名。</p></div>
+      <div class="name"><b>蓉城</b><p>相传五代后蜀的孟昶下令在城头遍种芙蓉，花开时满城如锦。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 古蜀 ============ -->
+<section class="view" data-view="shu" hidden>
+  <div class="phead">
+    <span class="ghost" aria-hidden="true">古</span>
+    <p class="eyebrow">古蜀 · 三千年的时间线</p>
+    <h1>先有青铜与黄金，后有这座城</h1>
+    <p class="lede">成都的城市史超过两千三百年，而在建城之前，这片平原上已经有了自成一格的青铜文明。</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>三星堆的青铜</h2><p>三件最有代表性的青铜器，拍自展厅。</p></div>
+    <div class="gallery">
+      <figure class="s6"><img src="img/sxd-mask-profile.jpg" alt="展厅里的三星堆青铜纵目面具，眼球呈圆柱状向外突出，两侧有宽大的耳" width="1600" height="1200" loading="lazy" decoding="async" style="--ar:2/1"><figcaption>青铜纵目面具，眼球向外突出</figcaption></figure>
+      <figure class="s3"><img src="img/sxd-tree.jpg" alt="玻璃罩中的三星堆青铜神树，枝干向上伸展" width="1200" height="1600" loading="lazy" decoding="async" style="--ar:4/5"><figcaption>青铜神树</figcaption></figure>
+      <figure class="s3"><img src="img/sxd-figure.jpg" alt="展柜中的三星堆青铜大立人，双臂举在胸前" width="1200" height="1600" loading="lazy" decoding="async" style="--ar:4/5"><figcaption>青铜大立人</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>时间线</h2></div>
+    <ol class="tl">
+      <li><span class="era">约 4800–3000 年前</span><div><h3>三星堆</h3><p>广汉的三星堆遗址出土了青铜大立人、纵目面具和青铜神树，造型与同时期中原的青铜器很不一样，至今仍有许多未解之谜。</p></div></li>
+      <li><span class="era">约 3000 年前</span><div><h3>金沙</h3><p>成都西侧的金沙遗址出土金面具、玉琮、象牙，以及太阳神鸟金饰。这个图案在 2005 年成为中国文化遗产标志。</p></div></li>
+      <li><span class="era">前 316 年</span><div><h3>秦并巴蜀</h3><p>秦灭蜀后在此筑城，成都的城市史由此一直延续到今天。</p></div></li>
+      <li><span class="era">约前 256 年</span><div><h3>都江堰</h3><p>李冰主持修建。鱼嘴分水，飞沙堰泄洪排沙，宝瓶口引水入平原，两千多年后仍在使用。</p></div></li>
+      <li><span class="era">汉</span><div><h3>锦官城</h3><p>蜀锦成为重要产业，朝廷设官管理织锦，成都因此有了锦官城的名字。</p></div></li>
+      <li><span class="era">221 年</span><div><h3>蜀汉</h3><p>刘备在成都称帝。后世在此纪念刘备与诸葛亮，就是今天的武侯祠。</p></div></li>
+      <li><span class="era">唐</span><div><h3>杜甫草堂</h3><p>杜甫在战乱中来到成都，在浣花溪畔安顿下来，在蜀中写下二百多首诗。唐代还有“扬一益二”的说法，益州就是成都。</p></div></li>
+      <li><span class="era">北宋</span><div><h3>交子</h3><p>成都商人发行的交子，被认为是世界上最早的纸币之一。</p></div></li>
+      <li><span class="era">今</span><div><h3>成都</h3><p>常住人口超过两千万，同时拥有双流和天府两座国际机场。</p></div></li>
+    </ol>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>金沙的太阳神鸟</h2><p>十二道光芒环绕太阳，外圈四只飞鸟，也是成都的城市标志。</p></div>
+    <div class="gallery">
+      <figure class="s3"><img src="img/js-gold.jpg" alt="黑色背景上的太阳神鸟金饰图案，十二道旋转的光芒，外圈四只首尾相接的飞鸟" width="1600" height="1411" loading="lazy" decoding="async" style="--ar:1/1"><figcaption>太阳神鸟金饰</figcaption></figure>
+      <figure class="s3"><img src="img/js-dome.jpg" alt="仰拍穹顶，玻璃顶棚上嵌着太阳神鸟图案" width="1600" height="1067" loading="lazy" decoding="async" style="--ar:1/1"><figcaption>穹顶上的太阳神鸟图案</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>都江堰</h2><p>两千多年前修建的水利工程，至今仍在分水、灌溉。</p></div>
+    <div class="gallery">
+      <figure class="s6"><img src="img/djy-panorama.jpg" alt="从高处俯瞰岷江与都江堰一带，远处是群山" width="1600" height="674" loading="lazy" decoding="async" style="--ar:2.4/1"><figcaption>俯瞰岷江与都江堰一带</figcaption></figure>
+      <figure class="s3"><img src="img/djy-baopingkou.jpg" alt="宝瓶口一带的江水，对岸山林中有古建筑" width="1600" height="983" loading="lazy" decoding="async" style="--ar:4/3"><figcaption>宝瓶口一带的江水与古建筑</figcaption></figure>
+      <figure class="s3"><img src="img/djy-yuzui.jpg" alt="鱼嘴分水堤伸入江中，岷江在这里分流" width="1600" height="1200" loading="lazy" decoding="async" style="--ar:4/3"><figcaption>鱼嘴分水堤，岷江在这里分流</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>影像</h2><p>三处遗址与水利工程的实拍照片。</p></div>
+    <div class="gal-group">
+      <h3>三星堆 <small>青铜与面具</small></h3>
+      <div class="masonry">
+        <figure class="fig"><img src="img/sxd-figure.jpg" alt="展柜中的青铜大立人" width="780" height="1040" loading="lazy" decoding="async"><figcaption>青铜大立人</figcaption></figure>
+        <figure class="fig"><img src="img/sxd-mask-profile.jpg" alt="展台上的青铜纵目面具，双眼向外突出" width="1000" height="750" loading="lazy" decoding="async"><figcaption>青铜纵目面具，双眼向外突出</figcaption></figure>
+        <figure class="fig"><img src="img/sxd-tree.jpg" alt="展柜中的青铜神树" width="780" height="1040" loading="lazy" decoding="async"><figcaption>青铜神树</figcaption></figure>
+        <figure class="fig"><img src="img/sxd-mask-crowned.jpg" alt="额头带高耸装饰的青铜面具" width="780" height="1040" loading="lazy" decoding="async"><figcaption>带高耸额饰的青铜面具</figcaption></figure>
+      </div>
+    </div>
+    <div class="gal-group">
+      <h3>金沙 <small>太阳神鸟</small></h3>
+      <div class="masonry">
+        <figure class="fig"><img src="img/js-gold.jpg" alt="太阳神鸟金饰图案，中间是旋转的光芒，外圈是四只飞鸟" width="900" height="794" loading="lazy" decoding="async"><figcaption>太阳神鸟图案：十二道旋转的光芒，外圈四只飞鸟</figcaption></figure>
+        <figure class="fig"><img src="img/js-dome.jpg" alt="金沙遗址博物馆穹顶上的太阳神鸟图案" width="1000" height="667" loading="lazy" decoding="async"><figcaption>金沙遗址博物馆的穹顶</figcaption></figure>
+        <figure class="fig"><img src="img/js-sculpture.jpg" alt="林间空地上的太阳神鸟雕塑" width="1000" height="751" loading="lazy" decoding="async"><figcaption>太阳神鸟雕塑</figcaption></figure>
+      </div>
+    </div>
+    <div class="gal-group">
+      <h3>都江堰 <small>岷江分流处</small></h3>
+      <div class="masonry">
+        <figure class="fig"><img src="img/djy-panorama.jpg" alt="从高处望向岷江与都江堰一带" width="1200" height="506" loading="lazy" decoding="async"><figcaption>从高处望向岷江与都江堰一带</figcaption></figure>
+        <figure class="fig"><img src="img/djy-baopingkou.jpg" alt="宝瓶口一带的江面与岸边古建筑" width="1000" height="614" loading="lazy" decoding="async"><figcaption>宝瓶口一带的江面</figcaption></figure>
+        <figure class="fig"><img src="img/djy-yuzui.jpg" alt="鱼嘴处的江面与竹笼堤" width="1000" height="750" loading="lazy" decoding="async"><figcaption>鱼嘴，江水在这里分流</figcaption></figure>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>五处值得专程去的地方</h2><p>停留时间是常见的参观节奏，按你自己的速度调整。</p></div>
+    <div class="rows">
+      <div class="row"><div><h3>金沙遗址博物馆</h3><p>太阳神鸟金饰、金面具，以及遗址发掘现场。想了解古蜀，从这里开始最顺。</p></div><p class="meta">市区西侧<br>建议停留 2–3 小时</p></div>
+      <div class="row"><div><h3>三星堆博物馆</h3><p>青铜大立人通高约 2.6 米，纵目面具宽约 1.38 米，近看比照片震撼得多。</p></div><p class="meta">德阳广汉，距成都约 40 公里<br>建议预留大半天到一天</p></div>
+      <div class="row"><div><h3>武侯祠</h3><p>红墙、竹径、古柏和三国文物。隔壁就是锦里，可以顺路。</p></div><p class="meta">市区南部<br>建议停留 1.5–2 小时</p></div>
+      <div class="row"><div><h3>杜甫草堂</h3><p>复原的茅屋、诗史堂、竹林与溪水，适合慢慢走。</p></div><p class="meta">市区西部<br>建议停留 2 小时</p></div>
+      <div class="row"><div><h3>都江堰景区</h3><p>看鱼嘴、飞沙堰和宝瓶口，再走一趟安澜索桥。可以和青城山排在同一天。</p></div><p class="meta">距成都约 60 公里，高铁约半小时<br>建议半天到一天</p></div>
+    </div>
+    <p class="note">热门景点常需要提前预约，开放时间与规则以景区官方公告为准。</p>
+  </div>
+</section>
+
+<!-- ============ 川味 ============ -->
+<section class="view" data-view="food" hidden>
+  <div class="phead">
+    <span class="ghost" aria-hidden="true">味</span>
+    <p class="eyebrow">川味 · 麻、辣之外还有很多味</p>
+    <h1>先问自己能吃多辣</h1>
+    <p class="lede">川菜的麻来自花椒，辣来自辣椒，郫县豆瓣负责打底。下面十二道菜按辣度分了级，拖动滑块就能筛出适合你的。</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>两种锅底</h2><p>红油锅底和鸳鸯锅，是第一次吃火锅最常见的两种选择。</p></div>
+    <div class="gallery">
+      <figure class="s3"><img src="img/hotpot-red.jpg" alt="一口红油火锅，汤面漂着辣椒和花椒，四周摆满毛肚、肉片和小菜" width="1563" height="1600" loading="lazy" decoding="async" style="--ar:1/1"><figcaption>红油锅底，辣椒和花椒浮在汤面</figcaption></figure>
+      <figure class="s3"><img src="img/hotpot-yuanyang.jpg" alt="鸳鸯锅，一边是清汤和菌菇，一边是红汤" width="1600" height="1200" loading="lazy" decoding="async" style="--ar:1/1"><figcaption>鸳鸯锅，一边红汤一边清汤</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="tools">
+      <div class="chips" role="group" aria-label="按类别筛选">
+        <button class="chip" type="button" data-cat="all" aria-pressed="true">全部</button>
+        <button class="chip" type="button" data-cat="热菜" aria-pressed="false">热菜</button>
+        <button class="chip" type="button" data-cat="面点" aria-pressed="false">面点</button>
+        <button class="chip" type="button" data-cat="小吃" aria-pressed="false">小吃</button>
+        <button class="chip" type="button" data-cat="火锅" aria-pressed="false">火锅串串</button>
+      </div>
+      <div class="slider">
+        <label for="spice">辣度上限</label>
+        <input id="spice" type="range" min="0" max="4" step="1" value="4">
+        <output id="spiceOut" for="spice">不限</output>
+        <span class="note" id="count"></span>
+      </div>
+    </div>
+
+    <div class="dishes" id="dishes">
+      <article class="card dish" data-cat="热菜" data-spice="3"><div class="dish-top"><h3>麻婆豆腐</h3><span class="dots"></span></div><span class="tag">热菜</span><p>豆腐、牛肉末、豆瓣酱和花椒面。行内讲究麻、辣、烫、香、酥、嫩、鲜、活八个字。</p></article>
+      <article class="card dish" data-cat="热菜" data-spice="2"><div class="dish-top"><h3>回锅肉</h3><span class="dots"></span></div><span class="tag">热菜</span><p>五花肉先煮后炒，配蒜苗和豆瓣，是四川家常菜里最有代表性的一道。</p></article>
+      <article class="card dish" data-cat="热菜" data-spice="1"><div class="dish-top"><h3>鱼香肉丝</h3><span class="dots"></span></div><span class="tag">热菜</span><p>菜里没有鱼，味道来自泡辣椒、葱姜蒜和糖醋，酸甜带一点微辣。</p></article>
+      <article class="card dish" data-cat="面点" data-spice="2"><div class="dish-top"><h3>担担面</h3><span class="dots"></span></div><span class="tag">面点</span><p>碗底是红油、芽菜和花椒，上面盖肉末。拌匀再吃，不要急着喝汤。</p></article>
+      <article class="card dish" data-cat="面点" data-spice="1"><div class="dish-top"><h3>钟水饺</h3><span class="dots"></span></div><span class="tag">面点</span><p>红油水饺，味道偏甜，辣得温和，是适合入门的一碗。</p></article>
+      <article class="card dish" data-cat="面点" data-spice="1"><div class="dish-top"><h3>龙抄手</h3><span class="dots"></span></div><span class="tag">面点</span><p>抄手就是馄饨，皮薄馅嫩，可以选清汤，也可以拌红油。</p></article>
+      <article class="card dish" data-cat="小吃" data-spice="2"><div class="dish-top"><h3>夫妻肺片</h3><span class="dots"></span></div><span class="tag">小吃</span><p>牛肉、牛杂切片，淋上红油、花椒和芝麻，是凉菜里的招牌。</p></article>
+      <article class="card dish" data-cat="小吃" data-spice="0"><div class="dish-top"><h3>蛋烘糕</h3><span class="dots"></span></div><span class="tag">小吃</span><p>鸡蛋面糊煎成薄饼，对折后夹甜馅或咸馅，现做现吃。</p></article>
+      <article class="card dish" data-cat="小吃" data-spice="0"><div class="dish-top"><h3>三大炮</h3><span class="dots"></span></div><span class="tag">小吃</span><p>糯米团裹上黄豆粉，淋红糖浆。软糯香甜，不辣。</p></article>
+      <article class="card dish" data-cat="小吃" data-spice="0"><div class="dish-top"><h3>冰粉</h3><span class="dots"></span></div><span class="tag">小吃</span><p>红糖水里的透明凉粉，常加山楂、葡萄干和花生碎，吃完辣的来一碗。</p></article>
+      <article class="card dish" data-cat="火锅" data-spice="4"><div class="dish-top"><h3>牛油火锅</h3><span class="dots"></span></div><span class="tag">火锅串串</span><p>牛油锅底配毛肚、鸭肠、黄喉。成都人常用香油加蒜泥做蘸碟，能压一压辣。</p></article>
+      <article class="card dish" data-cat="火锅" data-spice="3"><div class="dish-top"><h3>串串香</h3><span class="dots"></span></div><span class="tag">火锅串串</span><p>食材穿在竹签上下锅，吃完按签数结账。一个人也能吃得很自在。</p></article>
+    </div>
+    <p class="note" id="empty" hidden>这个组合下没有菜品，把辣度上限调高一点试试。</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>火锅的几种样子</h2><p>同一个城市，锅也有不同的玩法。</p></div>
+    <div class="masonry">
+      <figure class="fig"><img src="img/hotpot-yuanyang.jpg" alt="一边红汤一边清汤的鸳鸯锅" width="900" height="675" loading="lazy" decoding="async"><figcaption>鸳鸯锅：一边红汤，一边清汤</figcaption></figure>
+      <figure class="fig"><img src="img/hotpot-red.jpg" alt="铺满花椒与辣椒的红汤火锅，周围摆着各色菜品" width="900" height="921" loading="lazy" decoding="async"><figcaption>红汤火锅，花椒和辣椒铺满汤面</figcaption></figure>
+      <figure class="fig"><img src="img/hotpot-ninegrid.jpg" alt="分成九格的火锅，汤色深浅不一" width="900" height="900" loading="lazy" decoding="async"><figcaption>九宫格火锅，一桌人可以按格子分着涮</figcaption></figure>
+      <figure class="fig"><img src="img/hotpot-copper.jpg" alt="中间有烟囱的铜锅火锅，周围摆满蔬菜和小菜" width="760" height="1070" loading="lazy" decoding="async"><figcaption>铜锅火锅，配蔬菜和小菜</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>常见味型</h2><p>川菜有二十多种味型。这六种在餐馆菜单里最常遇到。</p></div>
+    <div class="flavors">
+      <div class="flavor"><b>麻辣</b><p>花椒加辣椒，火锅和麻婆豆腐的底味。</p></div>
+      <div class="flavor"><b>家常</b><p>以豆瓣酱为主，咸鲜微辣，回锅肉就是这一路。</p></div>
+      <div class="flavor"><b>鱼香</b><p>泡辣椒、葱姜蒜加糖醋，酸甜咸辣兼有。</p></div>
+      <div class="flavor"><b>荔枝</b><p>酸甜像荔枝，宫保鸡丁常见的是糊辣荔枝味。</p></div>
+      <div class="flavor"><b>红油</b><p>红油、酱油加一点糖，水饺和凉菜里常见。</p></div>
+      <div class="flavor"><b>怪味</b><p>麻辣咸甜酸鲜香同时出现，是最难描述的一种。</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>点菜的几个小提醒</h2></div>
+    <ul class="rules">
+      <li>当地的“微辣”可能比你想象的更辣，第一次先点微辣。</li>
+      <li>火锅可以点鸳鸯锅，一边红汤一边清汤，两边都能涮。</li>
+      <li>同行人多时，每样点小份，吃得到的种类更多。</li>
+      <li>辣到受不了，喝牛奶或吃点米饭，比喝水管用。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 熊猫 ============ -->
+<section class="view" data-view="panda" hidden>
+  <div class="head-grid">
+  <div class="phead">
+    <span class="ghost" aria-hidden="true">熊</span>
+    <p class="eyebrow">熊猫 · 成都大熊猫繁育研究基地</p>
+    <h1>早点去，熊猫在吃饭</h1>
+    <p class="lede">基地在市区北边，距市中心约 10 公里。圈养熊猫通常在早上喂食时最活跃，中午常常睡觉，所以最好开园后尽快进去。</p>
+  </div>
+  <figure><img src="img/panda.jpg" alt="一只大熊猫的正脸特写，吐着粉红色的舌头" width="1600" height="1600" loading="lazy" decoding="async" style="--ar:1/1"><figcaption>一只吐舌头的大熊猫</figcaption></figure>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>一天里什么时候最好看</h2><p>常见规律，具体看熊猫个体和天气，仅供参考。</p></div>
+    <div class="split2"><div class="rl">
+    <div class="rhythm" role="img" aria-label="活跃程度示意：早上喂食时最高，中午最低，傍晚回升">
+      <div class="slot"><div class="col"><div class="fill" style="--h:92%"></div></div><span class="lv">高</span><span class="when">开园–10:00</span><span class="what">早餐，最活跃</span></div>
+      <div class="slot"><div class="col"><div class="fill" style="--h:60%"></div></div><span class="lv">中</span><span class="when">10:00–11:30</span><span class="what">吃完逐渐安静</span></div>
+      <div class="slot"><div class="col"><div class="fill" style="--h:18%"></div></div><span class="lv">低</span><span class="when">11:30–14:30</span><span class="what">午睡时间</span></div>
+      <div class="slot"><div class="col"><div class="fill" style="--h:38%"></div></div><span class="lv">中低</span><span class="when">14:30–16:30</span><span class="what">陆续醒来</span></div>
+      <div class="slot"><div class="col"><div class="fill" style="--h:55%"></div></div><span class="lv">中</span><span class="when">16:30 以后</span><span class="what">加餐，有些活动</span></div>
+    </div>
+    <p class="note">基地热门时段需提前预约，交通与购票方式以基地官方信息为准。</p>
+    </div>
+    <figure class="fig"><img src="img/panda.jpg" alt="对着镜头吐舌头的大熊猫" width="900" height="900" loading="lazy" decoding="async"><figcaption>镜头前的大熊猫</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>四个关于熊猫的事实</h2></div>
+    <div class="facts">
+      <div class="card fact"><h3>第六根手指</h3><p>熊猫前掌有一块特化的腕骨，俗称伪拇指，用来抓握竹子。</p></div>
+      <div class="card fact"><h3>出生时很小</h3><p>幼崽刚出生只有约 100 克，通体粉红，几乎没有毛。</p></div>
+      <div class="card fact"><h3>一直在吃</h3><p>竹子的热量低，所以熊猫清醒的大部分时间都在进食，通常超过十个小时。</p></div>
+      <div class="card fact"><h3>保护有进展</h3><p>2016 年，世界自然保护联盟把大熊猫的等级从“濒危”下调为“易危”。2021 年，大熊猫国家公园正式设立。</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>看熊猫的规矩</h2></div>
+    <ul class="rules">
+      <li>不投喂、不触摸，不翻越围栏。</li>
+      <li>不用闪光灯，不大声喊叫。</li>
+      <li>听从工作人员指引，按指定路线参观。</li>
+      <li>带孩子的家庭，提醒他们不要往场内扔东西。</li>
+    </ul>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>不止熊猫</h2><p>如果想多走走，这几处都在成都周边。</p></div>
+    <div class="rows">
+      <div class="row"><div><h3>都江堰一带的熊猫园区</h3><p>方向与都江堰、青城山一致，可以和水利工程排在同一天。</p></div><p class="meta">西北方向<br>约 60 公里</p></div>
+      <div class="row"><div><h3>青城山</h3><p>道教名山，山路有林荫，与都江堰在 2000 年一同列入世界遗产。</p></div><p class="meta">都江堰市<br>建议半天</p></div>
+      <div class="row"><div><h3>龙泉山</h3><p>成都东侧的山脊，天气好时能远眺成都平原。</p></div><p class="meta">东侧<br>适合傍晚</p></div>
+      <div class="row"><div><h3>西岭雪山</h3><p>冬季有雪景，是成都人看雪的首选。</p></div><p class="meta">大邑县<br>约 100 公里</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 茶与戏 ============ -->
+<section class="view" data-view="tea" hidden>
+  <div class="phead">
+    <span class="ghost" aria-hidden="true">茶</span>
+    <p class="eyebrow">茶与戏 · 老成都的日常</p>
+    <h1>一碗茶，一出戏，一件手艺</h1>
+    <p class="lede">成都人说“摆龙门阵”，意思是闲聊。茶馆是这件事发生的地方，戏和手艺也大多从这样的市井里长出来。</p>
+  </div>
+
+  <figure><img src="img/tea-gate.jpg" alt="人民公园鹤鸣茶社的牌匾和茶座，四周绿树成荫" width="1600" height="1067" loading="lazy" decoding="async" style="--ar:2/1;--op:50% 40%"><figcaption>人民公园里的鹤鸣茶社</figcaption></figure>
+
+  <figure class="banner" style="margin:0"><img src="img/tea-gate.jpg" alt="人民公园里的鹤鸣茶社，牌匾下是茶座和行人" width="1200" height="800" decoding="async"><figcaption>人民公园里的鹤鸣茶社</figcaption></figure>
+
+  <div class="sec">
+    <div class="sec-head"><h2>盖碗茶的三件套</h2></div>
+    <div class="gaiwan">
+      <svg viewBox="0 0 420 240" role="img" aria-label="盖碗示意图：茶盖为天，茶碗为人，茶托为地">
+        <ellipse cx="150" cy="206" rx="124" ry="22" fill="var(--surface2)" stroke="var(--bronze)" stroke-width="2"/>
+        <ellipse cx="150" cy="200" rx="64" ry="9" fill="none" stroke="var(--bronze)" stroke-width="1.5" opacity=".7"/>
+        <path d="M76,112 L224,112 C221,162 196,198 150,198 C104,198 79,162 76,112 Z" fill="var(--surface)" stroke="var(--bronze)" stroke-width="2"/>
+        <path d="M72,114 C76,80 112,60 150,60 C188,60 224,80 228,114 Z" fill="var(--gold-fill)" stroke="var(--gold)" stroke-width="2"/>
+        <circle cx="150" cy="54" r="8" fill="var(--gold-fill)" stroke="var(--gold)" stroke-width="2"/>
+        <path class="svgline" d="M196,76 L258,60"/><text class="svgtxt" x="266" y="66">盖 · 天</text>
+        <path class="svgline" d="M224,150 L258,142"/><text class="svgtxt" x="266" y="148">碗 · 人</text>
+        <path class="svgline" d="M262,206 L274,206" /><path class="svgline" d="M240,208 L258,208"/><text class="svgtxt" x="266" y="212">托 · 地</text>
+      </svg>
+      <div class="sec">
+        <p>盖碗茶由茶盖、茶碗、茶托三部分组成，老辈人说盖为天、碗为人、托为地，天地人合在一起才是一碗完整的茶。</p>
+        <p>喝的时候用盖子轻轻拨开茶叶，再从缝隙里啜饮。茶馆里常见的是茉莉花茶，也有峨眉山的竹叶青、雅安的蒙顶山茶。</p>
+        <figure class="fig"><img src="img/tea-cup.jpg" alt="白色盖碗里舒展的绿茶叶片" width="800" height="800" loading="lazy" decoding="async"><figcaption>盖碗里舒展的绿茶</figcaption></figure>
+        <figure class="inline-fig"><img src="img/tea-cup.jpg" alt="白瓷茶碗和茶托，碗里是舒展的绿茶叶" width="1600" height="1600" loading="lazy" decoding="async" style="--ar:1/1"><figcaption>碗与托，盖子已经取下，碗里是绿茶</figcaption></figure>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>在茶馆里会遇到</h2><p>想要市井气，人民公园的老茶社比游客集中的景区更自在。</p></div>
+    <div class="trio">
+      <div class="card"><h3>坐下就是半天</h3><p>竹椅、小方桌、一碗茶，没有人催你走。打牌、读报、发呆都行。</p></div>
+      <div class="card"><h3>掺茶师傅</h3><p>手持长嘴铜壶，隔着一段距离把水准确注进碗里，是茶馆里的一门手艺。</p></div>
+      <div class="card"><h3>采耳</h3><p>成都茶馆里常见的服务，师傅用小工具帮你清理耳朵。第一次尝试可以先看看别人怎么做。</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>茶馆里的样子</h2></div>
+    <div class="masonry">
+      <figure class="fig"><img src="img/tea-pond.jpg" alt="鹤鸣茶社旁的池塘、茶座和小船" width="900" height="560" loading="lazy" decoding="async"><figcaption>鹤鸣茶社旁的池塘和茶座</figcaption></figure>
+      <figure class="fig"><img src="img/tea-crowd.jpg" alt="露天茶座上，人们围着小方桌聊天" width="900" height="600" loading="lazy" decoding="async"><figcaption>露天茶座，人们围着小方桌聊天</figcaption></figure>
+      <figure class="fig"><img src="img/tea-ear.jpg" alt="茶馆里采耳师傅正在为客人服务" width="900" height="600" loading="lazy" decoding="async"><figcaption>茶馆里的采耳师傅</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>川剧：昆、高、胡、弹、灯</h2><p>川剧由五种声腔合成，高腔的特点是一人唱、众人在后台帮腔。</p></div>
+    <div class="pills">
+      <div class="pill"><b>昆</b>昆腔</div>
+      <div class="pill"><b>高</b>高腔</div>
+      <div class="pill"><b>胡</b>胡琴</div>
+      <div class="pill"><b>弹</b>弹戏</div>
+      <div class="pill"><b>灯</b>灯戏</div>
+    </div>
+    <p style="max-width:42em;color:var(--muted)">最出名的绝活是变脸，演员在一两秒内换掉脸谱，常常就在观众眼前。还有吐火、滚灯等特技。茶园式的小剧场离舞台近，看得最清楚，演出场次请提前查询。</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>几样还在做的手艺</h2></div>
+    <div class="crafts">
+      <div class="craft"><b>蜀锦</b><p>成都织锦的传统，汉代起就很有名，织造技艺已列入国家级非遗。</p></div>
+      <div class="craft"><b>蜀绣</b><p>以软缎和彩丝为主，针法细密，常见题材有熊猫、芙蓉和花鸟。</p></div>
+      <div class="craft"><b>成都漆艺</b><p>在木胎或金属上层层髹漆再打磨，成品温润有光。</p></div>
+      <div class="craft"><b>银花丝</b><p>把银拉成细丝，再编织、焊接成立体造型，工序极其繁复。</p></div>
+      <div class="craft"><b>竹编</b><p>四川竹资源丰富，青神一带的竹编尤其精细，可细如发丝。</p></div>
+      <div class="craft"><b>糖画</b><p>用热糖浆在石板上勾出图案，先是玩，凉了就可以吃。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 行程 ============ -->
+<section class="view" data-view="plan" hidden>
+  <div class="phead">
+    <span class="ghost" aria-hidden="true">程</span>
+    <p class="eyebrow">三日行程 · 古蜀、熊猫、近郊</p>
+    <h1>三天，把成都走一遍</h1>
+    <p class="lede">第一天看古蜀与老城，第二天看熊猫与茶馆，第三天二选一去近郊。每天只排三到四件事，留出吃饭和发呆的时间。</p>
+  </div>
+
+  <div class="sec">
+    <div class="tabs" role="tablist" aria-label="选择第几天">
+      <button class="chip" type="button" role="tab" id="tab1" data-day="1" aria-selected="true">第一天 古蜀与老城</button>
+      <button class="chip" type="button" role="tab" id="tab2" data-day="2" aria-selected="false" tabindex="-1">第二天 熊猫与茶馆</button>
+      <button class="chip" type="button" role="tab" id="tab3" data-day="3" aria-selected="false" tabindex="-1">第三天 近郊二选一</button>
+    </div>
+
+    <div class="panel" role="tabpanel" data-day="1" aria-labelledby="tab1">
+      <div class="panel-head"><h2>古蜀与老城</h2><p class="note">先去金沙打底，再去武侯祠，晚上吃火锅。</p></div>
+      <ol class="slots">
+        <li><span class="t">上午</span><div><b>金沙遗址博物馆</b><p>看太阳神鸟金饰和金面具，约 2–3 小时。</p></div></li>
+        <li><span class="t">中午</span><div><b>就近吃一顿家常川菜</b><p>回锅肉、麻婆豆腐、一碗米饭，先适应一下口味。</p></div></li>
+        <li><span class="t">下午</span><div><b>武侯祠和锦里</b><p>两处相邻，先看祠堂再逛锦里。锦里游客多，想清静就早点去。</p></div></li>
+        <li><span class="t">晚上</span><div><b>火锅，然后沿锦江走走</b><p>点鸳鸯锅更稳妥。饭后在锦江边散步，九眼桥一带夜景很热闹。</p></div></li>
+      </ol>
+    </div>
+
+    <div class="panel" role="tabpanel" data-day="2" aria-labelledby="tab2" hidden>
+      <div class="panel-head"><h2>熊猫与茶馆</h2><p class="note">早起看熊猫，下午在茶馆里慢下来，晚上看川剧。</p></div>
+      <ol class="slots">
+        <li><span class="t">早上</span><div><b>成都大熊猫繁育研究基地</b><p>开园后尽快入园，先看喂食，约 3 小时。</p></div></li>
+        <li><span class="t">中午</span><div><b>回市区吃面点</b><p>担担面、钟水饺、龙抄手，选一家人少的小店。</p></div></li>
+        <li><span class="t">下午</span><div><b>人民公园喝盖碗茶</b><p>坐一两个小时，看人、听口音。之后可以去宽窄巷子，或改去杜甫草堂。</p></div></li>
+        <li><span class="t">晚上</span><div><b>茶园剧场看川剧</b><p>折子戏加变脸，约一个半小时，建议提前订座并确认场次。</p></div></li>
+      </ol>
+    </div>
+
+    <div class="panel" role="tabpanel" data-day="3" aria-labelledby="tab3" hidden>
+      <div class="panel-head"><h2>近郊二选一</h2><p class="note">两条线路都要早出发，选一条就好。</p></div>
+      <div class="opt" role="group" aria-label="选择线路">
+        <span>线路</span>
+        <button class="chip" type="button" data-opt="a" aria-pressed="true">A 都江堰 + 青城山</button>
+        <button class="chip" type="button" data-opt="b" aria-pressed="false">B 三星堆</button>
+      </div>
+      <div class="optbox" data-opt="a"><div class="pair"><figure class="fig crop"><img src="img/djy-panorama.jpg" alt="从高处望向岷江与都江堰一带" width="1200" height="506" loading="lazy" decoding="async"><figcaption>岷江与都江堰一带</figcaption></figure><figure class="fig crop"><img src="img/djy-yuzui.jpg" alt="鱼嘴处的江面与竹笼堤" width="1000" height="750" loading="lazy" decoding="async"><figcaption>鱼嘴</figcaption></figure></div>
+      <ol class="slots">
+        <li><span class="t">上午</span><div><b>都江堰景区</b><p>高铁约半小时到都江堰。看鱼嘴、飞沙堰、宝瓶口，走安澜索桥。</p></div></li>
+        <li><span class="t">中午</span><div><b>在都江堰吃午饭</b><p>景区附近有不少本地馆子，可以尝尝当地的做法。</p></div></li>
+        <li><span class="t">下午</span><div><b>青城山前山</b><p>山路有林荫，体力一般的话走到半山，再乘车或缆车下行。</p></div></li>
+        <li><span class="t">傍晚</span><div><b>返回成都</b><p>留出机动时间，节假日路上可能较堵。</p></div></li>
+      </ol></div>
+      <div class="optbox" data-opt="b" hidden><div class="pair one"><figure class="fig crop"><img src="img/sxd-mask-profile.jpg" alt="展台上的青铜纵目面具" width="1000" height="750" loading="lazy" decoding="async"><figcaption>青铜纵目面具</figcaption></figure></div>
+      <ol class="slots">
+        <li><span class="t">上午</span><div><b>前往广汉，进馆参观</b><p>距成都约 40 公里，建议提前预约，早点到。先看青铜大立人和纵目面具。</p></div></li>
+        <li><span class="t">中午</span><div><b>在广汉吃午饭</b><p>景区附近就餐，吃完回馆里接着看。</p></div></li>
+        <li><span class="t">下午</span><div><b>青铜神树与遗址</b><p>一号神树通高约 3.96 米，也别错过玉器和金器展厅。</p></div></li>
+        <li><span class="t">晚上</span><div><b>回成都，晚饭吃串串</b><p>走了一天，吃点轻松的。</p></div></li>
+      </ol></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>出发前要知道</h2></div>
+    <div class="three">
+      <div class="card"><h3>什么时候来</h3><p>春季（3–5 月）和秋季（9–11 月）气温适中，最舒服。夏季湿热多雨，冬季阴冷湿润，晴天不多。</p></div>
+      <div class="card"><h3>怎么到、怎么走</h3><ul><li>机场有双流和天府两座，订票前看清楚。</li><li>高铁站有成都东、成都西、成都南。</li><li>市内以地铁加打车为主。</li></ul></div>
+      <div class="card"><h3>住在哪里</h3><ul><li>春熙路、太古里：夜生活多，地铁换乘方便。</li><li>人民公园、宽窄巷子：老城气氛，步行去茶馆。</li><li>武侯祠、锦里：第一天最省路。</li></ul></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>出发前清单</h2><p>勾选状态保存在这台设备的浏览器里。</p></div>
+    <div class="check">
+      <label><input type="checkbox" id="c1"><span>预约熊猫基地和需要预约的景点</span></label>
+      <label><input type="checkbox" id="c2"><span>订好第二晚的川剧座位，确认演出场次</span></label>
+      <label><input type="checkbox" id="c3"><span>查看出发前一周的天气预报</span></label>
+      <label><input type="checkbox" id="c4"><span>带一件薄外套和一把折叠伞，傍晚的盆地会凉下来</span></label>
+      <label><input type="checkbox" id="c5"><span>装好当地的地铁乘车应用，并绑定支付方式</span></label>
+      <label><input type="checkbox" id="c6"><span>想好第一餐吃什么，别空腹第一顿就点特辣</span></label>
+    </div>
+  </div>
+</section>
+
+<p class="foot">资料整理于 2026 年 10 月，仅作一般旅行参考。图片为实拍照片，版权归各自摄影者所有。开放时间、预约规则和票价请以景区与场馆的官方信息为准。</p>
+</main>
+
+<script>
+(function(){
+  var routes=['home','shu','food','panda','tea','plan'];
+  var views=document.querySelectorAll('[data-view]');
+  var links=document.querySelectorAll('.nav a');
+  function route(){
+    var h=location.hash.replace('#','');
+    if(routes.indexOf(h)<0)h='home';
+    views.forEach(function(v){
+      if(v.classList.contains('view'))v.hidden=v.getAttribute('data-view')!==h;
+    });
+    links.forEach(function(a){
+      if(a.getAttribute('href')==='#'+h)a.setAttribute('aria-current','page');
+      else a.removeAttribute('aria-current');
+    });
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange',route);
+  route();
+
+  /* 今日蜀签 */
+  var F=[
+    {lv:'上上',k:'口福',t:'宜先吃一碗担担面，红油拌匀再下口。忌第一餐就点特辣。',to:'food',lab:'去看川味'},
+    {lv:'上上',k:'熊运',t:'宜早起去看熊猫吃早餐。忌中午才到，那时它们多半在午睡。',to:'panda',lab:'看熊猫指南'},
+    {lv:'上',k:'茶运',t:'宜在人民公园坐下，让一碗茶喝到水淡。忌赶行程。',to:'tea',lab:'看茶与戏'},
+    {lv:'上',k:'古运',t:'宜先去金沙看太阳神鸟，再去三星堆看纵目面具。忌把两处塞进同一个下午。',to:'shu',lab:'看古蜀时间线'},
+    {lv:'中上',k:'行运',t:'宜先订熊猫基地和景点预约，再订餐厅。忌节假日临时起意去青城山。',to:'plan',lab:'看三日行程'},
+    {lv:'上',k:'戏运',t:'宜挑一场茶园里的川剧折子戏，提前订座。忌坐在最后一排看变脸。',to:'tea',lab:'看川剧'},
+    {lv:'中上',k:'锦运',t:'宜去看蜀锦和蜀绣的展览，再带一件小手作回家。忌只在景区买批量货。',to:'tea',lab:'看手艺'},
+    {lv:'中',k:'衣运',t:'宜带一件薄外套，傍晚的盆地会凉下来。忌穿太少去夜游锦江。',to:'plan',lab:'看出发前清单'}
+  ];
+  var seal=document.getElementById('drawSeal'),txt=document.getElementById('drawText'),lk=document.getElementById('drawLink');
+  function render(f){
+    seal.innerHTML='<b>'+f.lv+'</b><span>'+f.k+'</span>';
+    txt.textContent=f.t;
+    lk.setAttribute('href','#'+f.to);
+    lk.textContent=f.lab;
+  }
+  var now=new Date(),y0=new Date(now.getFullYear(),0,0);
+  var cur=Math.floor((now-y0)/864e5)%F.length;
+  render(F[cur]);
+  document.getElementById('drawBtn').addEventListener('click',function(){
+    var n;do{n=Math.floor(Math.random()*F.length)}while(n===cur);
+    cur=n;render(F[n]);
+  });
+
+  /* 太阳神鸟：尊重减少动态偏好 */
+  try{
+    if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      var s=document.getElementById('sun');if(s&&s.pauseAnimations)s.pauseAnimations();
+    }
+  }catch(e){}
+
+  /* 川味筛选 */
+  var cards=[].slice.call(document.querySelectorAll('#dishes .dish'));
+  var chips=[].slice.call(document.querySelectorAll('[data-cat].chip'));
+  var slider=document.getElementById('spice'),out=document.getElementById('spiceOut');
+  var count=document.getElementById('count'),empty=document.getElementById('empty');
+  var labels=['不辣','最多微辣','最多中辣','最多重辣','不限'];
+  labels[0]='只看不辣';labels[1]='最多微辣';
+  var dishNames=['不辣','微辣','中辣','重辣'];
+  var cat='all';
+  cards.forEach(function(c){
+    var n=+c.getAttribute('data-spice'),box=c.querySelector('.dots'),h='';
+    for(var i=1;i<=4;i++)h+='<i class="'+(i<=n?'on':'')+'"></i>';
+    box.innerHTML=h;
+    box.setAttribute('role','img');
+    box.setAttribute('aria-label','辣度：'+(n===0?'不辣':dishNames[n]||'特辣'));
+  });
+  function apply(){
+    var max=+slider.value,n=0;
+    cards.forEach(function(c){
+      var ok=(cat==='all'||c.getAttribute('data-cat')===cat)&&(+c.getAttribute('data-spice')<=max);
+      c.hidden=!ok;if(ok)n++;
+    });
+    out.textContent=labels[max];
+    count.textContent='显示 '+n+' 道';
+    empty.hidden=n>0;
+  }
+  chips.forEach(function(b){
+    b.addEventListener('click',function(){
+      cat=b.getAttribute('data-cat');
+      chips.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+      apply();
+    });
+  });
+  slider.addEventListener('input',apply);
+  apply();
+
+  /* 行程：天数标签 */
+  var tabs=[].slice.call(document.querySelectorAll('[role=tab]'));
+  var panels=[].slice.call(document.querySelectorAll('.panel'));
+  function pick(d){
+    panels.forEach(function(p){p.hidden=p.getAttribute('data-day')!==d});
+    tabs.forEach(function(b){
+      var on=b.getAttribute('data-day')===d;
+      b.setAttribute('aria-selected',on?'true':'false');
+      b.tabIndex=on?0:-1;
+    });
+  }
+  tabs.forEach(function(b,i){
+    b.addEventListener('click',function(){pick(b.getAttribute('data-day'))});
+    b.addEventListener('keydown',function(e){
+      var j=-1;
+      if(e.key==='ArrowRight')j=(i+1)%tabs.length;
+      if(e.key==='ArrowLeft')j=(i+tabs.length-1)%tabs.length;
+      if(j>-1){e.preventDefault();tabs[j].focus();pick(tabs[j].getAttribute('data-day'))}
+    });
+  });
+
+  /* 第三天线路 */
+  var opts=[].slice.call(document.querySelectorAll('[data-opt].chip'));
+  var lists=[].slice.call(document.querySelectorAll('.optbox'));
+  opts.forEach(function(b){
+    b.addEventListener('click',function(){
+      var o=b.getAttribute('data-opt');
+      lists.forEach(function(l){l.hidden=l.getAttribute('data-opt')!==o});
+      opts.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+    });
+  });
+
+  /* 清单：只保存在本机浏览器 */
+  var key='shuyun-checklist';
+  var boxes=[].slice.call(document.querySelectorAll('.check input'));
+  var saved=[];
+  try{saved=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){saved=[]}
+  boxes.forEach(function(b){
+    b.checked=saved.indexOf(b.id)>-1;
+    b.addEventListener('change',function(){
+      var a=boxes.filter(function(x){return x.checked}).map(function(x){return x.id});
+      try{localStorage.setItem(key,JSON.stringify(a))}catch(e){}
+    });
+  });
+})();
+</script>
+
+</body></html>
